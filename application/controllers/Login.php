@@ -8,6 +8,15 @@ class Login extends CI_Controller {
 		$this->load->view('pages/login');
 	}
 
+    public function deconnexion() {
+        $this->session->sess_destroy();
+        redirect('login');
+    }
+
+    public function inscription() {
+        $this->load->view('pages/inscription');
+    }
+
     public function insertNewUser($nom,$mdp) {
 
         $this->Login->insertUtilisateur($nom,$mdp);
@@ -16,7 +25,10 @@ class Login extends CI_Controller {
 
     }
     
-    public function checkLogin($nom, $mdp) {
+    public function checkLogin() {
+
+        $nom = $this->input->post('nom');
+        $mdp = $this->input->post('mdp');
 
         $rep = $this->Login->verifyLogin($nom, $mdp);
 
@@ -30,11 +42,15 @@ class Login extends CI_Controller {
         $this->session->set_userdata('utilisateur', $rep);
 
         if($isAdmin == '0') { //simple user
-            $this->load->view('pages/client/acceuil');
+            redirect('client/listeMyObjets/'.$rep['id']);
+            //$this->load->view('pages/client/acceuil');
         }
 
         else { // admin
-            $this->load->view('pages/admin/acceuil');
+        
+            redirect('admin/gestionCategorie');
+            // $this->load->view('pages/admin/gestionCategorie');
         }
+
     }
 }

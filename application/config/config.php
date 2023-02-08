@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/S3/EXAMEN/EXAMEN36H/PROJET/';
+$config['base_url'] = 'http://takalotakalo.epizy.com/';
 
 /*
 |--------------------------------------------------------------------------

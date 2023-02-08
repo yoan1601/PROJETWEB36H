@@ -8,6 +8,22 @@ class Client extends CI_Controller {
 		$this->listeMyObjets($idUser);
 	}
 
+    public function interet() {
+        $user = $this->session->utilisateur;
+        $objetDemandeur = $this->input->post('idObjetDemandeur');
+        $data['objetDemandeur'] = $objetDemandeur;
+
+        $allMyObjets = $this->Client->getMyObjets($user['id']);
+        $data['allMyObjets'] = $allMyObjets;
+
+        $this->load->view('pages/pageClient/choixMonObjet', $data);
+    }
+
+    public function deconnexion() {
+        $this->session->sess_destroy();
+        redirect('login');
+    }
+
     public function accepte ($idProposition) {
 
         $this->Client->accepte($idProposition);
@@ -24,13 +40,13 @@ class Client extends CI_Controller {
 
     }
 
-    public function listeOtherObjets($idOtherUser) {
+    public function listeOtherObjets($monId) {
 
-        $OtherObjets = $this->Client->getMyObjets($idOtherUser);
+        $OtherObjets = $this->Client->getOthersObjets($monId);
 
         $data['OtherObjets'] = $OtherObjets;
 
-        $this->load->view('pages/client/listeOtherObjets', $data);
+        $this->load->view('pages/pageClient/listeOtherObjets', $data);
 
     }
 
@@ -44,11 +60,14 @@ class Client extends CI_Controller {
 
         $data['allPropositions'] = $allPropositions;
 
-        $this->load->view('pages/client/listeProposition', $data);
+        $this->load->view('pages/pageClient/listeProposition', $data);
 
     }
 
-    public function insertProposition($idObjetDemandeur, $idMonObjet) {
+    public function insertProposition() {
+
+        $idObjetDemandeur = $this->input->post('idObjetDemandeur');
+        $idMonObjet = $this->input->post('idMonObjet');
 
         $this->Client->insertProposition($idObjetDemandeur, $idMonObjet);
 
@@ -66,7 +85,7 @@ class Client extends CI_Controller {
 
         $data['objet'] = $obj;
 
-        $this->load->view('pages/client/fiche', $data);
+        $this->load->view('pages/pageClient/ficheObjet', $data);
 
     }
 
@@ -80,9 +99,24 @@ class Client extends CI_Controller {
 
     }
 
-    public function updateObjet($idObjet, $descri, $prix, $idimage) { 
+    public function update0($idObjet) { 
 
-        $this->Client->updateObjet($idObjet, $descri, $prix, $idimage);
+        $obj = $this->Client->getObjetById($idObjet);
+
+        $data['objet'] = $obj;
+
+        $this->load->view('pages/pageClient/modifierObjet', $data);
+    }
+
+    public function updateObjet() { 
+
+        $idObjet = $this->input->post('idObj');
+        $descri = $this->input->post('descri');
+        $prix = $this->input->post('prix');
+        $img = $this->input->post('img');
+        $img = $this->Client->getImageByName($img);
+
+        $this->Client->updateObjet($idObjet, $descri, $prix, $img['id']);
 
         $obj = $this->Client->getObjetById($idObjet);
 
@@ -104,7 +138,7 @@ class Client extends CI_Controller {
 
         $data['allMyObjets'] = $allMyObjets;
 
-        $this->load->view('pages/client/listeMyObjets', $data);
+        $this->load->view('pages/pageClient/gestionObjets', $data);
 
     }
 

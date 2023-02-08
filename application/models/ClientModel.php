@@ -7,18 +7,28 @@
 
             $proposition = array();
 
+            // $sql = "SELECT obj.idutilisateur envoyeur, p.* 
+            // FROM proposition p
+            // JOIN objet o ON o.id = p.idobjetdemandeur
+            // JOIN objet obj ON obj.id = p.idmonobjet
+            // JOIN utilisateur u ON u.id IN (
+            //     select ob.idutilisateur 
+            //     from objet ob 
+            //     JOIN proposition p ON ob.id = p.idobjetdemandeur
+            // ) 
+            // where u.id = %d and p.id NOT IN (select idproposition from refus) and p.id NOT IN (select idproposition from accepte)";
+
             $sql = "SELECT obj.idutilisateur envoyeur, p.* 
             FROM proposition p
-            JOIN objet o ON o.id = p.idobjetdemandeur
             JOIN objet obj ON obj.id = p.idmonobjet
-            JOIN utilisateur u ON u.id = (
-                select o.idutilisateur 
-                from objet o 
-                JOIN proposition p ON o.id = p.idobjetdemandeur
-            ) 
-            where u.id = %d and p.id NOT IN (select idproposition from refus) and p.id NOT IN (select idproposition from accepte)";
+            JOIN objet obj2 ON obj2.id = p.idobjetdemandeur
+            JOIN utilisateur u ON u.id = obj.idutilisateur 
+            JOIN utilisateur u2 ON u2.id = obj2.idutilisateur 
+            where u.id != %d and u2.id = %d and p.id NOT IN (select idproposition from refus) and p.id NOT IN (select idproposition from accepte)";
 
-            $sql = sprintf($sql, $idutilisateur);
+            $sql = sprintf($sql, $idutilisateur,$idutilisateur);
+
+            // echo $sql;
 
             $query = $this->db->query($sql);
 
@@ -31,6 +41,7 @@
                 $monobjet = $this->getObjetById($row['idmonobjet']);
                 $dateHeure = $row['dateheure'];
 
+                $ligne['id'] = $row['id'];
                 $ligne['utilisateur'] = $user;
                 $ligne['objetDemandeur'] = $objetDemandeur;
                 $ligne['monobjet'] = $monobjet;
@@ -73,7 +84,7 @@
 
         public function updateObjet($idObjet, $descri, $prix, $idimage) {
 
-            $sql = "UPDATE objet set descri = '%s', prix = %d, idimage = %d where id = %d";
+            $sql = "UPDATE objet set descri = %s, prix = %d, idimage = %d where id = %d";
 
             $sql = sprintf($sql, $this->db->escape($descri), $prix, $idimage, $idObjet);
             
@@ -110,7 +121,13 @@
             $query = $this->db->query($sql);
 
             foreach($query->result_array() as $row) {
-                $object [] = $row;
+                $obj['id'] = $row['id'];
+                $obj['idutilisateur'] = $row['idutilisateur'];
+                $obj['descri'] = $row['descri'];
+                $obj['prix'] = $row['prix'];
+                $img = $this->getImageById($row['idimage']);
+                $obj['image'] = $img['descri'];
+                $object [] = $obj;
             }
 
             return $object;
@@ -134,7 +151,14 @@
 
             $row = $query->row_array();
 
-            return $row;
+            $obj['id'] = $row['id'];
+            $obj['idutilisateur'] = $row['idutilisateur'];
+            $obj['descri'] = $row['descri'];
+            $obj['prix'] = $row['prix'];
+            $img = $this->getImageById($row['idimage']);
+            $obj['image'] = $img['descri'];
+
+            return $obj;
         }
 
         public function getOthersObjets($idutilisateur){
@@ -148,10 +172,48 @@
             $query = $this->db->query($sql);
 
             foreach($query->result_array() as $row) {
-                $object [] = $row;
+                $obj['id'] = $row['id'];
+                $obj['idutilisateur'] = $row['idutilisateur'];
+                $obj['descri'] = $row['descri'];
+                $obj['prix'] = $row['prix'];
+                $img = $this->getImageById($row['idimage']);
+                $obj['image'] = $img['descri'];
+                $object [] = $obj;
             }
 
             return $object;
+        }
+
+        public function getImageByName($img) {
+
+            $sql = "SELECT * FROM image where descri like '%s%s%s' ";
+
+            $sql = sprintf($sql, '%',$img, '%');
+            
+            //echo $sql;
+
+            $query = $this->db->query($sql);
+
+            $object = array();
+
+            foreach($query->result_array() as $row) {
+                $object [] = $row;
+            }
+
+            return $object[0];
+        }
+
+        public function getImageById($idImg){
+
+            $sql = "SELECT * FROM image where id = %d ";
+
+            $sql = sprintf($sql, $idImg);
+
+            $query = $this->db->query($sql);
+
+            $row = $query->row_array();
+
+            return $row;
         }
 
     }
