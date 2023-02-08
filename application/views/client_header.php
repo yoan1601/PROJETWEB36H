@@ -1,7 +1,6 @@
-
 <?php
-    $user = $this->session->utilisateur;
-?>   
+$user = $this->session->utilisateur;
+?>
 <html lang="en">
 
 <head>
@@ -42,6 +41,7 @@
 
 
     <!-- Search Wrapper Area Start -->
+
     <div class="search-wrapper section-padding-100">
         <div class="search-close">
             <i class="fa fa-close" aria-hidden="true"></i>
@@ -50,16 +50,36 @@
             <div class="row">
                 <div class="col-12">
                     <div class="search-content">
-                        <form action="#" method="get">
-                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit"><img src="<?php echo site_url('img/core-img/search.png'); ?>" alt=""></button>
+                        <form action="<?php echo site_url('client/searchBy') ?>" method="get">
+                            <input type="search" name="mot" id="search" placeholder="Inserer votre recherche" style="
+    width: 42% !important;
+">
+                            <button type="submit" style="
+    margin-left: 71%;
+    width: 11%;
+    background-color: white;
+"><img src="<?php echo site_url('img/core-img/search.png'); ?>" alt=""></button>
+                            <!-- <div class="nice-select" tabindex="0" style="
+    width: max-content;
+    height: 100%;
+    margin-right: 47px;
+">                          -->
+                                    <select class="nice-select" name="idCategorie" id="idC" style="
+    width: max-content;
+    height: 100%;
+    margin-right: 47px;">
+                                        <option value="">Categories</option>
+                                        <?php foreach($allCategorie as $categorie) { ?>
+                                        <option value="<?php echo $categorie['id'] ?>"><?php echo $categorie['descri'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Search Wrapper Area End -->
+    </div> <!-- Search Wrapper Area End -->
 
     <!--  Main Content Wrapper Start  -->
     <div class="main-content-wrapper d-flex clearfix">
@@ -68,17 +88,12 @@
         <div class="container position-sticky z-index-sticky top-0">
             <div class="row">
                 <div class="col-12">
-                    <nav
-                        class="navbar navbar-expand-lg  blur border-radius-xl top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
+                    <nav class="navbar navbar-expand-lg  blur border-radius-xl top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
                         <div class="container-fluid px-0">
-                            <a class="navbar-brand font-weight-bolder ms-sm-3"
-                                href="https://demos.creative-tim.com/material-kit/index" rel="tooltip"
-                                title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+                            <a class="navbar-brand font-weight-bolder ms-sm-3" href="https://demos.creative-tim.com/material-kit/index" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
                                 TAKALO
                             </a>
-                            <button class="navbar-toggler shadow-none ms-2 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation"
-                                aria-expanded="false" aria-label="Toggle navigation">
+                            <button class="navbar-toggler shadow-none ms-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon mt-2">
                                     <span class="navbar-toggler-bar bar1"></span>
                                     <span class="navbar-toggler-bar bar2"></span>
@@ -90,7 +105,7 @@
                                     <li class="nav-item dropdown dropdown-hover mx-2" style="
     font-size: larger;
 ">
-                                        <a href="<?php echo site_url('client/listeMyObjets/'.$user['id']); ?>" style="
+                                        <a href="<?php echo site_url('client/listeMyObjets/' . $user['id']); ?>" style="
     font-size: 92%;
     margin-left: -228%;
 ">
@@ -117,9 +132,8 @@
 
                                     <li class="nav-item my-auto ms-3 ms-lg-0">
 
-                                    <form action="<?php echo(site_url('')); ?>" method="get">
-                                        <button type="submit"
-                                            class="btn btn-sm  bg-gradient-primary  mb-0 me-1 mt-2 mt-md-0">Deconnexion</a>
+                                        <form action="<?php echo (site_url('')); ?>" method="get">
+                                            <button type="submit" class="btn btn-sm  bg-gradient-primary  mb-0 me-1 mt-2 mt-md-0">Deconnexion</a>
                                         </form>
 
                                     </li>

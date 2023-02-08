@@ -8,6 +8,62 @@ class Admin extends CI_Controller {
 		$this->gestionCategorie();
 	}
 
+    public function listeAllObjets (){
+
+        $allObjets = $this->Admin->getAllObjets();
+
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['OtherObjets'] = $allObjets;
+
+        $this->load->view('pages/pageAdmin/listeOtherObjets', $data);
+
+    }
+
+    public function listeAllObjetByCategory($idcategorie){
+
+        $OtherObjets = $this->Admin->getAllObjetByCategory($idcategorie);
+
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['OtherObjets'] = $OtherObjets;
+
+        $this->load->view('pages/pageAdmin/listeOtherObjets', $data);
+
+    }
+
+    public function listUtilisateur() {
+
+        $nbUser = $this->Admin->getUtilisateurInscrit();
+
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['nbUser'] = $nbUser;
+
+        $this->load->view('pages/pageAdmin/listUtilisateur', $data);
+        
+    }
+
+    public function listEchange() {
+
+        $nbEchange = $this->Admin->getEchange();
+
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['nbEchange'] = $nbEchange;
+
+        $this->load->view('pages/pageAdmin/listEchange', $data);
+        
+    }
+
     public function supprimerCategorie($id) {
         $this->Admin->deleteCategorie($id);
         $this->gestionCategorie();
@@ -20,7 +76,10 @@ class Admin extends CI_Controller {
     }
 
     public function creer0 () {
-        $this->load->view('pages/pageAdmin/creerCategorie');
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+        $this->load->view('pages/pageAdmin/creerCategorie', $data);
     }
 
     public function update0($id) { 
@@ -28,6 +87,10 @@ class Admin extends CI_Controller {
         $categorie = $this->Admin->getCategorieById($id);
 
         $data['categorie'] = $categorie;
+
+        $allCategorie = $this->Admin->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
 
         $this->load->view('pages/pageAdmin/modifierCategorie', $data);
     }

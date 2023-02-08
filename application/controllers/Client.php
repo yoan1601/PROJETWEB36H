@@ -7,6 +7,117 @@ class Client extends CI_Controller {
 	{
 		$this->listeMyObjets($idUser);
 	}
+    
+    public function getListByInterval ($idutilisateur, $prix, $pourcentage) {
+
+        $min = $prix * ( 1 - $pourcentage/100);
+        $max = $prix * ( 1 + $pourcentage/100);
+
+        $allMyObjets = $this->Client->getMyObjetInterval($idutilisateur, $min, $max);
+
+        $data['allMyObjets'] = $allMyObjets;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $this->load->view('pages/pageClient/gestionObjets', $data);
+    }
+
+    public function recherche0 () {
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $this->load->view('pages/pageClient/recherche', $data);
+    }
+
+    public function ajout0 () {
+        $allCategorie = $this->Client->getCategorie();
+
+        $allImage = $this->Client->getAllImages();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['allImage'] = $allImage;
+
+        $this->load->view('pages/pageClient/ajoutObjet', $data);
+    }
+
+    public function ajoutObjet() { 
+
+        $idUser = $this->input->post('idUser');
+        $descri = $this->input->post('descri');
+        $img = $this->input->post('idImage');
+        $prix = $this->input->post('prix');
+        $idCategorie = $this->input->post('idCategorie');
+
+        //$image = $this->Client->getImageByName($img);
+
+        $this->Client->ajoutObjet($idUser, $descri, $prix, $img, $idCategorie);
+
+        $this->listeMyObjets($idUser);
+
+    }
+
+    public function listeOtherObjetsByCategory($monId, $idcategory) {
+
+        $OtherObjets = $this->Client->getOthersObjetsByCategory($monId, $idcategory);
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['OtherObjets'] = $OtherObjets;
+
+        $this->load->view('pages/pageClient/listeOtherObjets', $data);
+
+    }
+
+    public function listeOtherObjets($monId) {
+
+        $OtherObjets = $this->Client->getOthersObjets($monId);
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
+        $data['OtherObjets'] = $OtherObjets;
+
+        $this->load->view('pages/pageClient/listeOtherObjets', $data);
+
+    }
+
+    public function searchBy() {
+                
+        $mot = $this->input->get('mot');
+        $idCategorie = $this->input->get('idCategorie');
+
+        $result = $this->Client->recherche($mot, $idCategorie);
+
+        $data['OtherObjets'] = $result;
+        
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+        
+        $this->load->view('pages/pageClient/listeOtherObjets', $data);
+
+    }
+
+    public function historique() {
+
+        $historique = $this->Client->historiqueEchange();
+
+        $data['historique'] = $historique;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+        
+        $this->load->view('pages/pageClient/historique', $data);
+
+    }
 
     public function interet() {
         $user = $this->session->utilisateur;
@@ -15,6 +126,10 @@ class Client extends CI_Controller {
 
         $allMyObjets = $this->Client->getMyObjets($user['id']);
         $data['allMyObjets'] = $allMyObjets;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
 
         $this->load->view('pages/pageClient/choixMonObjet', $data);
     }
@@ -40,25 +155,30 @@ class Client extends CI_Controller {
 
     }
 
-    public function listeOtherObjets($monId) {
+    // public function listeOtherObjets($monId) {
 
-        $OtherObjets = $this->Client->getOthersObjets($monId);
+    //     $OtherObjets = $this->Client->getOthersObjets($monId);
 
-        $data['OtherObjets'] = $OtherObjets;
+    //     $data['OtherObjets'] = $OtherObjets;
 
-        $this->load->view('pages/pageClient/listeOtherObjets', $data);
+    //     $this->load->view('pages/pageClient/listeOtherObjets', $data);
 
-    }
+    // }
 
     public function listeProposition() {
 
         $user = $this->session->utilisateur;
 
         $allPropositions = $this->Client->getPropositions($user['id']);
+        
 
         $data = array();
 
         $data['allPropositions'] = $allPropositions;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
 
         $this->load->view('pages/pageClient/listeProposition', $data);
 
@@ -85,6 +205,10 @@ class Client extends CI_Controller {
 
         $data['objet'] = $obj;
 
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
         $this->load->view('pages/pageClient/ficheObjet', $data);
 
     }
@@ -105,6 +229,14 @@ class Client extends CI_Controller {
 
         $data['objet'] = $obj;
 
+        $allImage = $this->Client->getAllImages();
+
+        $data['allImage'] = $allImage;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
+
         $this->load->view('pages/pageClient/modifierObjet', $data);
     }
 
@@ -124,19 +256,15 @@ class Client extends CI_Controller {
 
     }
     
-    public function ajoutObjet($idUser, $descri, $prix, $idImage) { 
-
-        $this->Client->ajoutObjet($idUser, $descri, $prix, $idImage);
-
-        $this->listeMyObjets($idUser);
-
-    }
-    
     public function listeMyObjets($idUser) {
 
         $allMyObjets = $this->Client->getMyObjets($idUser);
 
         $data['allMyObjets'] = $allMyObjets;
+
+        $allCategorie = $this->Client->getCategorie();
+
+        $data['allCategorie'] = $allCategorie;
 
         $this->load->view('pages/pageClient/gestionObjets', $data);
 

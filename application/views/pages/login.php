@@ -36,11 +36,11 @@
               <div class="card-body">
                 <form role="form" method="POST" action="login/checkLogin" class="text-start">
                   <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Nom</label>
+                    <!-- <label class="form-label">Nom</label> -->
                     <input type="text" name="nom" class="form-control" value="admin">
                   </div>
                   <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Mot de passe</label>
+                    <!-- <label class="form-label">Mot de passe</label> -->
                     <input type="password" name="mdp" class="form-control" value="1234">
                   </div>
                   

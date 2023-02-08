@@ -3,7 +3,20 @@
   margin-top: 10%;
   background-color: white;
 ">
+<style>
+#iray {
+    width: 20vw;
+    height: max-content;
+    text-align: center;
+    /* margin: 20px 20px; */
+    border: 1px solid gray;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px grey;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 
+</style>
 
      <!-- CONTAINS debut -->
 
@@ -15,8 +28,7 @@
                  <div id="sary">
                      <img src="<?php echo(site_url('img/objets/'.$obj['image'])); ?>" alt="">
                  </div>
-                 <div id="lettre">
-                     <p>
+                 <div id="lettre" style="text-align: center;margin-top: 1%;">    <p>
                         <?php echo($obj['descri']); ?>
                      </p>
                      <p>

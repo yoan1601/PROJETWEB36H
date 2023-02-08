@@ -18,7 +18,7 @@
                              </a>
                          </div>
                          <div id="supprimer">
-                             <a href="<?php echo site_url('admin/supprimerCategorie/'.$categorie['id']) ?>">
+                             <a href="<?php echo site_url('admin/supprimerCategorie') ?>">
                                  supprimer
                              </a>
                          </div>

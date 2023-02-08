@@ -1,6 +1,3 @@
-<?php
-    $user = $this->session->utilisateur;
-?>            
             <!-- CONTAINS debut -->
             <div class="col-12 grid-margin" style="
     /* text-align: -webkit-right; */
@@ -13,15 +10,15 @@
 ">
                         <h4 class="card-title" style="
     margin-left: 9%;
-">Modifier un objet</h4>
-                        <form class="form-sample" method="post" action="<?php echo site_url('client/ajoutObjet'); ?>">
+">Recherche</h4>
+                        <form class="form-sample" method="post" action="<?php echo site_url('client/updateObjet'); ?>">
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-9">Description</label>
+                                        <label class="col-sm-9">Mot cle</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="descri" value="<?php echo $objet['descri'] ?>">
+                                            <input type="text" value="<?php echo $objet['descri'] ?>" name="descri">
                                         </div>
                                     </div>
                                 </div>
@@ -31,26 +28,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <div class="row">
                                         <label class="col-sm-9">Photo</label>
-                                            <div class="col-sm-9">
-                                                <select name="idImage" id="idimg">
-                                                    <?php foreach($allImage as $image) { ?>
-                                                    <option value="<?php echo $image['id'] ?>"><?php echo $image['descri'] ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                                <!-- <input type="text" name="img" > -->
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                        <label class="col-sm-9">Categorie</label>
-                                            <div class="col-sm-9">
-                                                <select name="idCategorie" id="idCategorie">
-                                                    <?php foreach($allCategorie as $c) { ?>
-                                                    <option value="<?php echo $c['id'] ?>"><?php echo $c['descri'] ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                                <!-- <input type="text" name="img" > -->
+                                        <div class="col-sm-9">
+                                            <div class="select" tabindex="0" style="
+    margin-left: -1%;
+"><span class="current">Test</span>
+                                                <!-- <ul class="list">
+                                                    <li data-value="test" class="option selected focus">Test</li>
+                                                    <li data-value="test2" class="option">Test2</li>
+                                                </ul> -->
+                                                <input type="text" name="img" value="<?php echo $objet['image'] ?>">
+                                                <input type="hidden" name="idObj" value="<?php echo $objet['id'] ?>">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -63,14 +51,14 @@
     margin-top: 9%;
 ">Prix</label>
                                                     <div class="col-sm-9">
-                                                        <input type="number" name="prix" min="0" value="<?php echo $objet['prix'] ?>">
-                                                        <input type="hidden" name="idUser" value="<?php echo $user['id'] ?>">
+                                                        <input type="number" name="prix" min="0"
+                                                            value="<?php echo $objet['prix'] ?>">
                                                     </div>
                                                     <div class="col-sm-9">
                                                         <button type="submit" class="btn btn-warning" style="
     margin-top: 33%;
     margin-left: 45%;
-"><a>Ajouter</a></button>
+"><a>Modifier</a></button>
                                                     </div>
 
 

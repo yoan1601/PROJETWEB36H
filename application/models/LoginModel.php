@@ -22,7 +22,7 @@
 
         public function insertUtilisateur($nom, $pswd) {
 
-            $sql = "INSERT INTO UTILISATEUR VALUES (null, '%s', '%s', '0')";
+            $sql = "INSERT INTO utilisateur VALUES (null, %s, %s, '0')";
 
             $sql = sprintf($sql, $this->db->escape($nom), $this->db->escape($pswd));
             

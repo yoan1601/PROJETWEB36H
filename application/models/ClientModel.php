@@ -3,6 +3,177 @@
 
     class ClientModel extends CI_Model {
 
+        public function getMyObjetInterval($idutilisateur, $min, $max){
+
+            $object = array();
+
+            $sql = "SELECT * FROM objet where idutilisateur = %d and id not in (select idobjet from suppression)
+                        and prix >= %d and prix <= %d";
+
+            $sql = sprintf($sql, $idutilisateur, $min, $max);
+
+            $query = $this->db->query($sql);
+
+            foreach($query->result_array() as $row) {
+                $obj['id'] = $row['id'];
+                $obj['idutilisateur'] = $row['idutilisateur'];
+                $obj['descri'] = $row['descri'];
+                $obj['prix'] = $row['prix'];
+                $img = $this->getImageById($row['idimage']);
+                $obj['image'] = $img['descri'];
+                $object [] = $obj;
+            }
+
+            return $object;
+        }
+
+        public function isInObjet($idObj, $lObj) {
+            foreach($lObj as $obj) {
+                if($idObj == $obj['id']) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public function ajoutObjet($idutilisateur, $descri, $prix, $idimage, $idcategorie){
+            $sql = "INSERT INTO objet VALUES (null, %d, %s, %d, %s)";
+
+            $sql = sprintf($sql, $idutilisateur, $this->db->escape($descri), $prix, $this->db->escape($idimage));
+            
+            $this->db->query($sql);
+
+            $allObjet = $this->getAllObjets();
+
+            $thisObj = $allObjet[count($allObjet) - 1];
+
+            $sql = "INSERT into categorieobjet values (null, %d, %d)";
+
+            $sql = sprintf($sql, $idcategorie, $thisObj['id']);
+
+            $this->db->query($sql);
+        }
+
+        public function getAllObjets () {
+
+            $object = array();
+    
+            $sql = "SELECT * FROM objet order by id" ;
+    
+            $query = $this->db->query($sql);
+    
+            foreach($query->result_array() as $row) {
+                $object [] = $row;
+            }
+    
+            return $object;
+    
+        }
+
+        public function getAllImages () {
+
+            $object = array();
+    
+            $sql = "SELECT * FROM image" ;
+    
+            $query = $this->db->query($sql);
+    
+            foreach($query->result_array() as $row) {
+                $object [] = $row;
+            }
+    
+            return $object;
+    
+        }
+
+        public function getOthersObjetsByCategory($idutilisateur, $idcategorie){
+
+            $object = array();
+
+            $sql = "SELECT * FROM objet 
+                    join categorieobjet on categorieobjet.idobjet = objet.id 
+                    where idutilisateur != %d and objet.id not in (select idobjet from suppression) and idcategorie = %d";
+
+            $sql = sprintf($sql, $idutilisateur, $idcategorie);
+
+            $query = $this->db->query($sql);
+
+            foreach($query->result_array() as $row) {
+                $obj['id'] = $row['id'];
+                $obj['idutilisateur'] = $row['idutilisateur'];
+                $obj['descri'] = $row['descri'];
+                $obj['prix'] = $row['prix'];
+                $img = $this->getImageById($row['idimage']);
+                $obj['image'] = $img['descri'];
+                $object [] = $obj;
+            }
+
+            return $object;
+        }
+
+        public function getCategorie () {
+
+            $category = array();
+
+            $sql = "SELECT * FROM categorie";
+
+            $query = $this->db->query($sql);
+
+            foreach($query->result_array() as $row) {
+                $category [] = $row;
+            }
+
+            return $category;
+
+        }
+
+        
+        public function recherche ($mot, $idcategorie) {
+
+            $object = array();
+
+            $sql = "SELECT objet.* FROM objet 
+                    join categorieobjet on categorieobjet.idobjet=objet.id 
+                    where categorieobjet.idcategorie=%d and objet.descri like '%s%s%s'" ;
+
+            $sql= sprintf($sql, $idcategorie, '%', $mot, '%');
+
+            //echo $sql;
+
+            $query = $this->db->query($sql);
+
+            foreach($query->result_array() as $row) {
+                $obj['id'] = $row['id'];
+                $obj['idutilisateur'] = $row['idutilisateur'];
+                $obj['descri'] = $row['descri'];
+                $obj['prix'] = $row['prix'];
+                $img = $this->getImageById($row['idimage']);
+                $obj['image'] = $img['descri'];
+                $object [] = $obj;
+            }
+
+            return $object;
+        }
+
+        public function historiqueEchange() {
+
+            $object = array();
+
+            $sql = "SELECT nom, descri, accepte.dateheure FROM accepte
+                    join proposition on proposition.id=accepte.idproposition
+                    join objet on objet.id=proposition.idobjetdemandeur
+                    or objet.id=proposition.idmonobjet
+                    join utilisateur on objet.idutilisateur=utilisateur.id";
+
+            $query = $this->db->query($sql);
+
+            foreach($query->result_array() as $row) {
+                $object [] = $row;
+            }
+
+            return $object;
+        }
+
         public function getPropositions($idutilisateur) {
 
             $proposition = array();
@@ -57,8 +228,14 @@
             $sql = "INSERT into accepte values (null, %d ,current_timestamp)";
 
             $sql = sprintf($sql, $idProposition);
-            
+
             $this->db->query($sql);
+
+            $proposition = $this->getPropositionById($idProposition);
+
+            //echange
+            $this->updateUtilisateurObjet($proposition['objetDemandeur']['idutilisateur'], $proposition['monobjet']['id']);
+            $this->updateUtilisateurObjet($proposition['monobjet']['idutilisateur'], $proposition['objetDemandeur']['id']);
         }
 
         public function refus ($idProposition) {
@@ -67,6 +244,33 @@
             $sql = sprintf($sql, $idProposition);
             
             $this->db->query($sql);
+        }
+
+        public function getPropositionById($id) {
+
+            $sql = "SELECT * from proposition where id = %d";
+
+            $sql = sprintf($sql, $id);
+            
+            $query = $this->db->query($sql);
+
+            $row = $query->row_array();
+
+            $rep = array();
+
+            $rep['id'] = $row['id'];
+
+            $idObjetDemandeur = $row['idobjetdemandeur'];
+            $objetDemandeur = $this->getObjetById($idObjetDemandeur);
+            $idMonObjet = $row['idmonobjet'];
+            $monobjet = $this->getObjetById($idMonObjet);
+
+            $rep['objetDemandeur'] = $objetDemandeur;
+            $rep['monobjet'] = $monobjet;
+
+            $rep['dateheure'] = $row['dateheure'];
+
+            return $rep;
         }
 
         public function getUtilisateurById($id) {
@@ -80,6 +284,16 @@
             $row = $query->row_array();
 
             return $row;
+        }
+
+        public function updateUtilisateurObjet($idutilisateur, $idObjet) {
+
+            $sql = "UPDATE objet set idutilisateur = %d where id = %d";
+
+            $sql = sprintf($sql, $idutilisateur, $idObjet);
+            
+            $this->db->query($sql);
+
         }
 
         public function updateObjet($idObjet, $descri, $prix, $idimage) {
@@ -131,14 +345,6 @@
             }
 
             return $object;
-        }
-
-        public function ajoutObjet($idutilisateur, $descri, $prix, $idimage){
-            $sql = "INSERT INTO objet VALUES (null, %d, '%s', %d, '%s')";
-
-            $sql = sprintf($sql, $idutilisateur, $this->db->escape($descri), $prix, $this->db->escape($idimage));
-            
-            $this->db->query($sql);
         }
 
         public function getObjetById($idObjet){

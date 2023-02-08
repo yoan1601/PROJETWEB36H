@@ -34,18 +34,18 @@
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start">
+                <form role="form" class="text-start" method="post" action="<?php echo site_url('login/insertNewUser'); ?>">
                   <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Nom</label>
-                    <input type="text" class="form-control">
+                    <!-- <label class="form-label">Nom</label> -->
+                    <input type="text" class="form-control" name="nom" required> 
                   </div>
                   <div class="input-group input-group-outline mb-3">
-                    <label class="form-label">Mot de passe</label>
-                    <input type="password" class="form-control">
+                    <!-- <label class="form-label">Mot de passe</label> -->
+                    <input type="password" class="form-control" name="mdp" required>
                   </div>
                   
                   <div class="text-center">
-                    <button type="button" class="btn bg-gradient-primary w-100 my-4 mb-2">S'inscrire</button>
+                    <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">S'inscrire</button>
                   </div>
                 </form>
               </div>

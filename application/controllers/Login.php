@@ -17,8 +17,13 @@ class Login extends CI_Controller {
         $this->load->view('pages/inscription');
     }
 
-    public function insertNewUser($nom,$mdp) {
+    public function insertNewUser() {
 
+        $nom = $this->input->post('nom');
+
+        $mdp = $this->input->post('mdp');
+
+        $this->Login->insertUtilisateur($nom,$mdp);
         $this->Login->insertUtilisateur($nom,$mdp);
 
         $this->checkLogin($nom, $mdp);

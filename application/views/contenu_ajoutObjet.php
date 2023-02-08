@@ -13,7 +13,7 @@
 ">
                         <h4 class="card-title" style="
     margin-left: 9%;
-">Modifier un objet</h4>
+">Ajouter un objet</h4>
                         <form class="form-sample" method="post" action="<?php echo site_url('client/ajoutObjet'); ?>">
 
                             <div class="row">
@@ -21,7 +21,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-9">Description</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="descri" value="<?php echo $objet['descri'] ?>">
+                                            <input type="text" name="descri">
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +63,7 @@
     margin-top: 9%;
 ">Prix</label>
                                                     <div class="col-sm-9">
-                                                        <input type="number" name="prix" min="0" value="<?php echo $objet['prix'] ?>">
+                                                        <input type="number" name="prix" min="0">
                                                         <input type="hidden" name="idUser" value="<?php echo $user['id'] ?>">
                                                     </div>
                                                     <div class="col-sm-9">

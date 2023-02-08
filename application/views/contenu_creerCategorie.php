@@ -1,9 +1,10 @@
             <!-- CONTAINS debut -->
-
             <div class="col-12 grid-margin" style="
     /* text-align: -webkit-right; */
-    /* width: 78%; */
+    width: 76%;
+    margin-top: 9%;
 ">
+
                 <div class="card" style="width: 70%;background-color: white;/* height: 77%; */">
                     <div class="card-body" style="
     margin-left: 40%;
