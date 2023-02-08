@@ -7,7 +7,7 @@
 
             $object = array();
 
-            $sql = "SELECT * FROM utilisateur where isadmin='0'";
+            $sql = "SELECT * FROM Utilisateur where isadmin='0'";
 
             $query = $this->db->query($sql);
 

@@ -14,7 +14,7 @@
                         <h4 class="card-title" style="
     margin-left: 9%;
 ">Modifier un objet</h4>
-                        <form class="form-sample" method="post" action="<?php echo site_url('client/ajoutObjet'); ?>">
+                        <form class="form-sample" method="post" action="<?php echo site_url('client/updateObjet'); ?>">
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -70,7 +70,7 @@
                                                         <button type="submit" class="btn btn-warning" style="
     margin-top: 33%;
     margin-left: 45%;
-"><a>Ajouter</a></button>
+"><a>Modifier</a></button>
                                                     </div>
 
 
