@@ -1,8 +1,12 @@
 ETU 1819 ; ETU 1892 ; ETU 1793
 projet 32H WEB S3
 
+LES updates sont en bas de la page (en cas de page blanche)
+
 navigateur : google
 taille/zoom ecran : 100%
+
+fonctionnaliet recherche : en bas du menu horizontal du client
 
 lien site web : www.takalotakalo.epizy.com
 
